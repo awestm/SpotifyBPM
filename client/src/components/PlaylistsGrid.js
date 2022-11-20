@@ -1,0 +1,28 @@
+import { StyledGrid } from '../styles';
+
+const PlaylistsGrid = ({ playlists }) => (
+    <>
+        {playlists && playlists.length ? (
+            <StyledGrid>
+                {playlists.map((playlist, i) => (
+                    <li className="grid__item" key={i}>
+                        {playlist.images.length && playlist.images[0] && (
+                            <div className="grid__item__img">
+                                <img src={playlist.images[0].url} alt={playlist.name} />
+                            </div>
+                        )}
+                        <h3 className="grid__item__name overflow-ellipsis">{playlist.name}</h3>
+                        <p className="grid__item__label">Playlist</p>
+                        <label htmlFor="include">
+                            <input type="checkbox" id="include" name="include" value="yes"/> Include
+                        </label>
+                        </li>
+                ))}
+            </StyledGrid>
+        ) : (
+            <p className="empty-notice">No playlists available</p>
+        )}
+    </>
+);
+
+export default PlaylistsGrid;
