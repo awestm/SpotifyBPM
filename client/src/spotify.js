@@ -142,3 +142,10 @@ export const getCurrentUserPlaylists = (limit = 40) => {
     return axios.get(`/me/playlists?limit=${limit}`);
 };
 
+export const generatePlaylist = (playlists, lowBPM, highBPM) => {
+    console.log({
+        playlists,
+        lowBPM,
+        highBPM
+    })
+};
