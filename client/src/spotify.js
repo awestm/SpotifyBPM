@@ -127,13 +127,6 @@ axios.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 axios.defaults.headers['Content-Type'] = 'application/json';
 
 /**
- * Get Current User's Profile
- * https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-current-users-profile
- * @returns {Promise}
- */
-export const getCurrentUserProfile = () => axios.get('/me');
-
-/**
  * Get a List of Current User's Playlists
  * https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-a-list-of-current-users-playlists
  * @returns {Promise}
@@ -142,10 +135,51 @@ export const getCurrentUserPlaylists = (limit = 40) => {
     return axios.get(`/me/playlists?limit=${limit}`);
 };
 
-export const generatePlaylist = (playlists, lowBPM, highBPM) => {
-    console.log({
-        playlists,
-        lowBPM,
-        highBPM
-    })
+export const generatePlaylist = async (playlists, lowBPM, highBPM, playlistName) => {
+    const { display_name } = (await axios.get('https://api.spotify.com/v1/me')).data;
+    const bpmDict = [];
+    const promisesOuter = [];
+    const promisesInner = [];
+    for (const s of playlists) {
+        const str = s.slice(axios.defaults.baseURL.length)
+        promisesOuter.push(
+            axios.get(str).then((response) => {
+                const { tracks } = response.data;
+                for (const t of tracks.items) {
+                    promisesInner.push(
+                        axios.get(`audio-features/${t.track.id}`).then((responseTwo) =>{
+                        const { tempo } = responseTwo.data;
+                        const bpm = {
+                            uri: t.track.uri,
+                            bpm: tempo
+                        }
+                        bpmDict.push(bpm);
+                        })
+                    );
+                }
+            })
+        );
+    console.log(promisesOuter);
+    }
+    Promise.all(promisesOuter).then(() => {
+        Promise.all(promisesInner).then(() => {
+            const uris = bpmDict.filter(item => item.bpm > lowBPM && item.bpm < highBPM).map((item) => item.uri);
+            if (uris.length > 0) {
+                axios.post(`users/${display_name}/playlists`,
+                {
+                    "name": playlistName,
+                    "public": false
+                }).then((response) => {
+                    const { id } = response.data;
+                    for (let i = 0; i < uris.length; i += 50) {
+                        const chunk = uris.slice(i, i + 50);
+                        axios.post(`playlists/${id}/tracks`,
+                            {
+                                "uris":chunk
+                            })
+                    }
+            })}
+
+        })
+    });
 };

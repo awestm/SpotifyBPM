@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 const querystring = require("query-string")
 const axios = require('axios')
-const {query} = require("express");
 
 
 const CLIENT_ID = process.env.CLIENT_ID
@@ -32,9 +31,9 @@ app.get('/login', (req, res) => {
     res.cookie(stateKey, state)
 
     const scope = [
-        'user-read-private',
-        'user-read-email',
-        'user-top-read',
+        'playlist-modify-public',
+        'playlist-modify-private',
+        'playlist-read-private'
     ].join(' ');
 
     const queryParams = querystring.stringify({

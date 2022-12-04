@@ -1,26 +1,27 @@
 import { useState, useEffect, useRef } from 'react';
 import { catchErrors } from '../utils';
-import { getCurrentUserPlaylists, getCurrentUserProfile, generatePlaylist } from '../spotify';
+import { getCurrentUserPlaylists, generatePlaylist } from '../spotify';
 import { StyledHeader, StyledBPM } from '../styles';
 import { PlaylistsGrid } from '../components/PlaylistsGrid'
 import SectionWrapper from "../components/SectionWrapper";
 
 const Main = () => {
-    const [profile, setProfile] = useState(null);
     const [playlists, setPlaylists] = useState(null);
     const [CheckedItems, setCheckedItems] = useState(new Map());
     const [CheckedHref, setCheckedHref] = useState([]);
     const lowBPM = useRef();
     const highBPM = useRef();
-
+    const playlistName = useRef();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const lb = lowBPM.current.value
-        const hb = highBPM.current.value
-        generatePlaylist(CheckedHref, lb, hb);
+        const lb = lowBPM.current.value;
+        const hb = highBPM.current.value;
+        const pln = playlistName.current.value;
+        generatePlaylist(CheckedHref, lb, hb, pln);
         lowBPM.current.value = "";
         highBPM.current.value = "";
+        playlistName.current.value = "";
     };
 
     const changeChecked = (e) => {
@@ -38,9 +39,6 @@ const Main = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const { data } = await getCurrentUserProfile();
-            setProfile(data);
-
             const userPlaylists = await getCurrentUserPlaylists();
             setPlaylists(userPlaylists.data);
         };
@@ -49,7 +47,7 @@ const Main = () => {
 
     return (
         <>
-            {profile && (
+            {(
                 <>
                     <StyledHeader type="user">
                         <div className="header__inner">
@@ -63,11 +61,15 @@ const Main = () => {
                     </StyledHeader>
                     <form onSubmit={handleSubmit}>
                         <StyledBPM>
-                            <label htmlFor="BPM">BPM </label>
-                            <input id="bpm1" style={{marginLeft:"5px"}} ref={lowBPM} type="number" />
-                            <label>-</label>
-                            <input id="bpm2" type="number" ref={highBPM}/>
-                            <button type="submit">Submit</button>
+                            <label htmlFor="Name">Playlist Name </label>
+                            <input id="playlistName" style={{marginLeft:"5px"}} ref={playlistName} type="text" />
+                        </StyledBPM>
+                        <StyledBPM>
+                        <label htmlFor="BPM">BPM </label>
+                        <input id="bpm1" style={{marginLeft:"5px"}} ref={lowBPM} type="number" />
+                        <label>-</label>
+                        <input id="bpm2" type="number" ref={highBPM}/>
+                        <button type="submit">Submit</button>
                         </StyledBPM>
                     </form>
                     {playlists && (
