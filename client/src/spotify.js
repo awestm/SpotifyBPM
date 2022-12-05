@@ -179,7 +179,9 @@ export const generatePlaylist = async (playlists, lowBPM, highBPM, playlistName)
                             })
                     }
             })}
-
+            else {
+                alert("No songs found in range for given playlists");
+            }
         })
     });
 };
