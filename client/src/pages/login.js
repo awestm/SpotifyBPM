@@ -30,10 +30,16 @@ const Background = styled.div`
     background-size: contain;
 `;
 
+const LOGIN_URI =
+    process.env.NODE_ENV !== 'production'
+        ? 'http://localhost:8888/login'
+        : 'https://spotifybpm.onrender.com/login';
+
+
 const Login = () => (
     <Background>
     <StyledLoginContainer>
-        <StyledLoginButton href="http://localhost:8888/login">
+        <StyledLoginButton href={LOGIN_URI}>
             Log in to Spotify
         </StyledLoginButton>
     </StyledLoginContainer>
