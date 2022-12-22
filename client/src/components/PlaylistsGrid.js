@@ -2,7 +2,7 @@ import { StyledGrid } from '../styles';
 import PropTypes from 'prop-types'
 
 const Checkbox = ({ type = 'checkbox', name, checked = false, onChange, value }) => (
-    <input type={type} name={name} checked={checked} onChange={onChange} value={value} />
+    <input type={type} name={name} checked={checked} onChange={onChange} value={value} className='round'/>
 );
 
 Checkbox.propTypes = {
@@ -12,12 +12,13 @@ Checkbox.propTypes = {
     onChange: PropTypes.func.isRequired,
 }
 
-export const PlaylistsGrid = ({ playlists, changeChecked, CheckedItems }) => {
+const PlaylistsGrid = ({ playlists, changeChecked, CheckedItems }) => {
     return (<>
         {playlists && playlists.length ? (
             <StyledGrid>
                 {playlists.map((playlist, i) => (
                     <li className="grid__item" key={i}>
+                        <label key={playlist.key} className="label">
                         {playlist.images.length && playlist.images[0] && (
                             <div className="grid__item__img">
                                 <img src={playlist.images[0].url} alt={playlist.name} />
@@ -25,9 +26,11 @@ export const PlaylistsGrid = ({ playlists, changeChecked, CheckedItems }) => {
                         )}
                         <h3 className="grid__item__name overflow-ellipsis">{playlist.name}</h3>
                         <p className="grid__item__label">Playlist</p>
-                        <label key={playlist.key}>
+                        <div className="round">
                             <Checkbox name={playlist.name} checked={CheckedItems.get(playlist.name)} id={i}
-                                      onChange={changeChecked} value={playlist.href}/>
+                                  onChange={changeChecked} value={playlist.href}/>
+                            <label htmlFor={i}></label>
+                        </div>
                         </label>
                     </li>
                 ))}
@@ -38,3 +41,5 @@ export const PlaylistsGrid = ({ playlists, changeChecked, CheckedItems }) => {
     </>
     )
 }
+
+export default PlaylistsGrid;

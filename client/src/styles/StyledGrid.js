@@ -17,7 +17,7 @@ const StyledGrid = styled.ul`
     background-color: var(--near-black);
     border-radius: var(--border-radius-subtle);
     transition: background-color 0.3s ease;
-    cursor: default;
+    cursor: pointer;
 
     &:hover,
     &:focus {
@@ -74,6 +74,56 @@ const StyledGrid = styled.ul`
     font-size: var(--fz-sm);
     color: var(--light-grey);
   }
+  
+  .label {
+    cursor: pointer;
+  }
+  
+.round {
+  position: relative;
+}
+
+.round label {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 14px;
+  left: 0.4em;
+  position: absolute;
+  top: 0;
+  width: 14px;
+}
+
+.round label:after {
+  border: 1px solid #fff;
+  border-top: none;
+  border-right: none;
+  content: "";
+  height: 3px;
+  left: 3.2px;
+  opacity: 0;
+  position: absolute;
+  top: 4px;
+  transform: rotate(-45deg);
+  width: 6px;
+}
+
+.round input[type="checkbox"] {
+  visibility: hidden;
+}
+
+.round input[type="checkbox"]:checked + label {
+  background-color: #66bb6a;
+  border-color: #66bb6a;
+}
+
+.round input[type="checkbox"]:checked + label:after {
+  opacity: 1;
+}
+
 `;
 
 export default StyledGrid;
+
+

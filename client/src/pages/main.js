@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { catchErrors } from '../utils';
 import { getCurrentUserPlaylists, generatePlaylist } from '../spotify';
-import { StyledHeader, StyledBPM } from '../styles';
-import { PlaylistsGrid } from '../components/PlaylistsGrid'
-import SectionWrapper from "../components/SectionWrapper";
+import { StyledHeader } from '../styles';
+import { PlaylistsGrid, SectionWrapper, BPMForm } from '../components'
 
 const Main = () => {
     const [playlists, setPlaylists] = useState(null);
@@ -20,13 +19,17 @@ const Main = () => {
         const lb = FormState.lowBPM;
         const hb = FormState.highBPM;
         const pln = FormState.playlistName;
-        if (lb === "" || hb === "" || pln === "" || CheckedHref.length === 0) {
+        if (lb === "" || hb === "" || pln === "") {
             alert("Please fill out all fields");
+        }
+        if (CheckedHref.length === 0) {
+            alert("You must select at least one playlist");
         }
         else if (lb > hb) {
             alert("BPM1 must be less than BPM2");        }
         else {
-            generatePlaylist(CheckedHref, lb, hb, pln);
+            generatePlaylist(CheckedHref, lb, hb, pln).then(() =>
+                alert("Playlist generated successfully!")).catch(() => alert("Error generating playlist"));
             setFormState({
                 lowBPM: "",
                 highBPM: "",
@@ -59,6 +62,7 @@ const Main = () => {
     useEffect(() => {
         const fetchData = async () => {
             const userPlaylists = await getCurrentUserPlaylists();
+            userPlaylists.data.items = userPlaylists.data.items.filter(playlist => playlist.images.length > 0);
             setPlaylists(userPlaylists.data);
         };
         catchErrors(fetchData());
@@ -71,26 +75,15 @@ const Main = () => {
                     <StyledHeader type="user">
                         <div className="header__inner">
                             <div>
-                                <h1 className="header__name">{"Spotify BPM Sorting Tool"}</h1>
+                                <h1 className="header__name">{"Spotify BPM"}</h1>
                                 <p>
                                     Select the playlists and specify a desired BPM bucket to create a playlist containing those BPM's
                                 </p>
                             </div>
                         </div>
                     </StyledHeader>
-                    <form onSubmit={handleSubmit}>
-                        <StyledBPM>
-                            <label htmlFor="Name">Playlist Name </label>
-                            <input name="playlistName" style={{marginLeft:"5px"}} type="text" onChange={handleFormChange} value={FormState.playlistName}/>
-                        </StyledBPM>
-                        <StyledBPM>
-                        <label htmlFor="BPM">BPM </label>
-                        <input id="bpm1" name="lowBPM" style={{marginLeft:"5px"}} type="number" onChange={handleFormChange} value={FormState.lowBPM}/>
-                        <label>-</label>
-                        <input name="highBPM" type="number"  onChange={handleFormChange} value={FormState.highBPM}/>
-                        <button type="submit">Submit</button>
-                        </StyledBPM>
-                    </form>
+                    <BPMForm onSubmit={handleSubmit} onChange={handleFormChange} formState={FormState}>
+                    </BPMForm>
                     {playlists && (
                         <main>
                             <SectionWrapper title="Playlists" seeAllLink="/playlists">
