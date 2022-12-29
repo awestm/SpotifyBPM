@@ -159,7 +159,6 @@ export const generatePlaylist = async (playlists, lowBPM, highBPM, playlistName)
                 }
             })
         );
-    console.log(promisesOuter);
     }
     Promise.all(promisesOuter).then(() => {
         Promise.all(promisesInner).then(() => {

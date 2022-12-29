@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { catchErrors } from '../utils';
 import { getCurrentUserPlaylists, generatePlaylist } from '../spotify';
 import { StyledHeader } from '../styles';
-import { PlaylistsGrid, SectionWrapper, BPMForm } from '../components'
+import { PlaylistsGrid, SectionWrapper, BPMForm, FormFeedback } from '../components'
 
 const Main = () => {
     const [playlists, setPlaylists] = useState(null);
@@ -11,7 +11,9 @@ const Main = () => {
     const [FormState, setFormState] = useState({
         lowBPM: "",
         highBPM: "",
-        playlistName: ""
+        playlistName: "",
+        formResponse: 0,
+        message: ""
     });
 
     const handleSubmit = (event) => {
@@ -20,21 +22,44 @@ const Main = () => {
         const hb = FormState.highBPM;
         const pln = FormState.playlistName;
         if (lb === "" || hb === "" || pln === "") {
-            alert("Please fill out all fields");
+            setFormState({
+                ...FormState,
+                formResponse: -2,
+                message: "Please fill out all fields."
+            });
         }
         if (CheckedHref.length === 0) {
-            alert("You must select at least one playlist");
+            setFormState({
+                ...FormState,
+                formResponse: -2,
+                message: "Please select at least one playlist."
+            });
         }
         else if (lb > hb) {
-            alert("BPM1 must be less than BPM2");        }
-        else {
-            generatePlaylist(CheckedHref, lb, hb, pln).then(() =>
-                alert("Playlist generated successfully!")).catch(() => alert("Error generating playlist"));
             setFormState({
-                lowBPM: "",
-                highBPM: "",
-                playlistName: ""
-            });
+                ...FormState,
+                formResponse: -2,
+                message: "Low BPM must be less than high BPM."
+            })
+        }
+        else {
+            generatePlaylist(CheckedHref, lb, hb, pln)
+                .then(() => {
+                    setFormState({
+                        lowBPM: "",
+                        highBPM: "",
+                        playlistName: "",
+                        formResponse: 1
+                    });
+                    setCheckedItems(new Map());
+                    setCheckedHref([]);
+                })
+                .catch(() => {
+                    setFormState({
+                        ...FormState,
+                        formResponse: -1
+                    });
+                });
         }
     };
 
@@ -82,11 +107,11 @@ const Main = () => {
                             </div>
                         </div>
                     </StyledHeader>
-                    <BPMForm onSubmit={handleSubmit} onChange={handleFormChange} formState={FormState}>
-                    </BPMForm>
+                    <BPMForm onSubmit={handleSubmit} onChange={handleFormChange} formState={FormState}></BPMForm>
+                    <FormFeedback success={ FormState.formResponse } message={ FormState.message }></FormFeedback>
                     {playlists && (
                         <main>
-                            <SectionWrapper title="Playlists" seeAllLink="/playlists">
+                            <SectionWrapper title="Select one or more playlists" seeAllLink="/playlists">
                                 <PlaylistsGrid playlists={playlists.items} changeChecked={changeChecked} CheckedItems={CheckedItems} />
                             </SectionWrapper>
                         </main>
