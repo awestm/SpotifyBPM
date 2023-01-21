@@ -33,7 +33,7 @@ const Background = styled.div`
 const LOGIN_URI =
     process.env.NODE_ENV !== 'production'
         ? 'http://localhost:8888/login'
-        : 'https://spotifybpm.onrender.com/login';
+        : 'https://bpmsort.onrender.com/login';
 
 
 const Login = () => (
