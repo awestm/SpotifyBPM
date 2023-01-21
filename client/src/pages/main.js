@@ -87,6 +87,7 @@ const Main = () => {
     useEffect(() => {
         const fetchData = async () => {
             const userPlaylists = await getCurrentUserPlaylists();
+            console.log(userPlaylists.data);
             userPlaylists.data.items = userPlaylists.data.items.filter(playlist => playlist.images.length > 0);
             setPlaylists(userPlaylists.data);
         };
@@ -100,7 +101,7 @@ const Main = () => {
                     <StyledHeader type="user">
                         <div className="header__inner">
                             <div>
-                                <h1 className="header__name">{"Spotify BPM"}</h1>
+                                <h1 className="header__name">{"BPM Sort"}</h1>
                                 <p>
                                     Select the playlists and specify a desired BPM bucket to create a playlist containing those BPM's
                                 </p>
@@ -111,7 +112,7 @@ const Main = () => {
                     <FormFeedback success={ FormState.formResponse } message={ FormState.message }></FormFeedback>
                     {playlists && (
                         <main>
-                            <SectionWrapper title="Select one or more playlists" seeAllLink="/playlists">
+                            <SectionWrapper title="Select one or more playlists">
                                 <PlaylistsGrid playlists={playlists.items} changeChecked={changeChecked} CheckedItems={CheckedItems} />
                             </SectionWrapper>
                         </main>

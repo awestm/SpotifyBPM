@@ -33,7 +33,9 @@ const StyledGrid = styled.ul`
       width: 100%;
       height: 100%;
 
-      &:hover,
+      &:hover {
+        text-decoration: underline;
+      }
       &:focus {
         text-decoration: none;
       }

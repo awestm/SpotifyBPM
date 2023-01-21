@@ -24,8 +24,7 @@ const PlaylistsGrid = ({ playlists, changeChecked, CheckedItems }) => {
                                 <img src={playlist.images[0].url} alt={playlist.name} />
                             </div>
                         )}
-                        <h3 className="grid__item__name overflow-ellipsis">{playlist.name}</h3>
-                        <p className="grid__item__label">Playlist</p>
+                        <h3 className="grid__item__name overflow-ellipsis"><a href={playlist.external_urls.spotify}> {playlist.name} </a> </h3>
                         <div className="round">
                             <Checkbox name={playlist.name} checked={CheckedItems.get(playlist.name)} id={i}
                                   onChange={changeChecked} value={playlist.href}/>

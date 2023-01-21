@@ -1,8 +1,6 @@
 import { StyledFormFeedback } from '../styles';
 
 const FormFeedback = ({ success, message }) => {
-    console.log(success);
-    console.log(message);
     switch(success) {
         case (1):
             return (
