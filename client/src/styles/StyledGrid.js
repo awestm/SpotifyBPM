@@ -65,11 +65,20 @@ const StyledGrid = styled.ul`
       border-radius: ${props => props.type === 'artist' ? '50%' : '2px'};
     }
   }
+  
+  .logo__img {
+    text-align: right;
+    padding-right:5px;
+    padding-bottom: 5px;
+    width: 30%;
+    height: 30%;
+  }
 
   .grid__item__name {
     margin: 0 0 var(--spacing-xxs);
     font-size: var(--fz-md);
     letter-spacing: normal;
+    padding-left: 5px;
   }
 
   .grid__item__label {
@@ -83,6 +92,10 @@ const StyledGrid = styled.ul`
   
 .round {
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding-left:5px;
+  padding-bottom: 5px;
 }
 
 .round label {

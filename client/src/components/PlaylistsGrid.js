@@ -29,6 +29,9 @@ const PlaylistsGrid = ({ playlists, changeChecked, CheckedItems }) => {
                             <Checkbox name={playlist.name} checked={CheckedItems.get(playlist.name)} id={i}
                                   onChange={changeChecked} value={playlist.href}/>
                             <label htmlFor={i}></label>
+                            <div className="logo__img">
+                                <img src={"https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_CMYK_White.png"} alt="Spotify Logo" />
+                            </div>
                         </div>
                         </label>
                     </li>
